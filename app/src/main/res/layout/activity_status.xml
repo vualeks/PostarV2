@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="@color/yellow"
+        android:id="@+id/status_relLay_topBar"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/status_cb_alarm"
+            android:layout_centerVertical="true"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textSize="22sp"
+                android:maxLines="2"
+                android:id="@+id/status_tv_name"
+                android:gravity="center|left"
+                android:layout_marginLeft="16dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#333333"
+                android:layout_marginTop="7dp"
+                android:id="@+id/status_tv_parcelNo"
+                android:layout_marginLeft="16dp"
+                />
+        </LinearLayout>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:text="Alarm"
+            android:id="@+id/status_cb_alarm"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            />
+
+
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/status_rv_status"
+        android:layout_below="@+id/status_relLay_topBar"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/status_relLay_topBar">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/status_pb_loading"
+            />
+    </RelativeLayout>
+
+
+
+    <TextView
+        android:layout_below="@+id/status_relLay_topBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/status_tv_noMessages"
+        android:text="@string/no_info"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        />
+</RelativeLayout>

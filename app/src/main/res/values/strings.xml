@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">PoštarV2</string>
+    <string name="dialog_message">Unesite potrebne podatke:</string>
+    <string name="cancel">Odustani</string>
+    <string name="delete_confirmation_message">Da li ste sigurni da želite obrisati ovu pošiljku?</string>
+    <string name="yes">DA</string>
+    <string name="no">NE</string>
+    <string name="ok">OK</string>
+    <string name="empty_message">Nema brojeva pošiljki. Dodaj neku pritiskom na +</string>
+    <string name="message_title">Pristigla pošiljka</string>
+    <string name="message_content">Pogledajte informacije o pošiljci.</string>
+    <string name="parcel_name">Naziv pošiljke</string>
+    <string name="parcel_no">Broj pošiljke</string>
+    <string name="check_daily">Provjeravati svaki dan</string>
+    <string name="no_info">Nema podataka o pošiljci</string>
+</resources>

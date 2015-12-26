@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/dialog_message"
+        android:textColor="#ffffff"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/custom_dialog_et_name"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@null"
+        android:hint="@string/parcel_name"
+        android:padding="16dp"
+        android:textColor="#ffffff"
+        android:singleLine="true"
+        android:maxLength="30"
+        android:textColorHint="#999999"
+        android:textCursorDrawable="@null"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/custom_dialog_et_parcelNo"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@null"
+        android:hint="@string/parcel_no"
+        android:padding="16dp"
+        android:inputType="textCapCharacters"
+        android:maxLength="20"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textColorHint="#999999"
+        android:textCursorDrawable="@null"
+        android:textSize="18sp" />
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/check_daily"
+        android:checked="true"
+        android:id="@+id/custom_dialog_cb_alarm"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
+        />
+
+</LinearLayout>
