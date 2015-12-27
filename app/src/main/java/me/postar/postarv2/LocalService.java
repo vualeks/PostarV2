@@ -87,7 +87,7 @@ public class LocalService extends Service {
                                                         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(LocalService.this)
                                                                 .setSmallIcon(R.drawable.ic_mail_outline)
                                                                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_mail_outline))
-                                                                ;
+                                                                .setAutoCancel(true);
                                                         mBuilder.setContentTitle(getString(R.string.message_title));
                                                         mBuilder.setContentText(getString(R.string.message_content));
                                                         Intent activityIntent = new Intent(LocalService.this, StatusActivity.class);
