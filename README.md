@@ -5,4 +5,4 @@ Android aplikacija za praćenje pošiljki koji dolaze putem Pošte Crne Gore pom
 
 #  Link za download APK-a :
 
-https://mega.nz/#!qh5WgDiJ!WSTmrrOPUApNcz23CrWw8_r_2a6XvJQ7tMMd28N-I5Y
+https://drive.google.com/open?id=0B_6XnIhe5BcgQ3d5THZkeDVWUTg
