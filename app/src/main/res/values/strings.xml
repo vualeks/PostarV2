@@ -7,7 +7,7 @@
     <string name="no">NE</string>
     <string name="ok">OK</string>
     <string name="empty_message">Nema brojeva pošiljki. Dodaj neku pritiskom na +</string>
-    <string name="message_title">Pristigla pošiljka</string>
+    <string name="message_title">Pristigla pošiljka:</string>
     <string name="message_content">Pogledajte informacije o pošiljci.</string>
     <string name="parcel_name">Naziv pošiljke</string>
     <string name="parcel_no">Broj pošiljke</string>

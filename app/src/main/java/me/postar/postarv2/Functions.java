@@ -39,7 +39,7 @@ class Functions
             String json = gson.toJson(parcels.get(i));
             edit.putString("array_" + i, json);
         }
-        edit.commit();
+        edit.apply();
     }
 
     public static void getParcels(ArrayList<PostParcel> parcels, Context c)

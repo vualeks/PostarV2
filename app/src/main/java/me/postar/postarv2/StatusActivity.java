@@ -1,5 +1,6 @@
 package me.postar.postarv2;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,16 +13,15 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.Response;
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class StatusActivity extends AppCompatActivity {
 
@@ -35,6 +35,11 @@ public class StatusActivity extends AppCompatActivity {
     private ProgressBar loading_ProgressBar;
     private CheckBox alarm_CheckBox;
     private ListAdapter adapter;
+
+    private static final String METHOD_NAME = "InformacijaOPosiljci";
+    private static final String NAMESPACE = "http://TrackTrace.com";
+    private static final String SOAP_ACTION = "http://TrackTrace.com/InformacijaOPosiljci";
+    private static final String URL = "https://e-racuni.postacg.me/TTService/Service1.asmx?WSDL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +69,8 @@ public class StatusActivity extends AppCompatActivity {
                 ArrayList<PostParcel> parcels = new ArrayList<>();
                 Functions.getParcels(parcels, StatusActivity.this);
 
-                for (PostParcel tempParcel : parcels)
-                {
-                    if (parcel.getParcelNo().equalsIgnoreCase(tempParcel.getParcelNo()))
-                    {
+                for (PostParcel tempParcel : parcels) {
+                    if (parcel.getParcelNo().equalsIgnoreCase(tempParcel.getParcelNo())) {
                         tempParcel.setAlarmOn(isChecked);
                         break;
                     }
@@ -78,72 +81,17 @@ public class StatusActivity extends AppCompatActivity {
         });
     }
 
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
 
         loadStaus();
     }
 
-    private void loadStaus()
-    {
-        Ion.with(StatusActivity.this)
-                .load("GET", "https://e-racuni.postacg.me/PracenjePosiljaka/")
-                .asString()
-                .withResponse()
-                .setCallback(new FutureCallback<Response<String>>() {
-                    @Override
-                    public void onCompleted(Exception e, Response<String> result) {
-                        Document html = Jsoup.parse(result.getResult());
-                        Element viewState = html.getElementById("__VIEWSTATE");
-                        Element eventValidation = html.getElementById("__EVENTVALIDATION");
-                        Element btnPronadji = html.getElementById("btnPronadji");
-
-                        Ion.with(StatusActivity.this)
-                                .load("POST", "https://e-racuni.postacg.me/PracenjePosiljaka/")
-                                .setBodyParameter("__VIEWSTATE", viewState.val())
-                                .setBodyParameter("__EVENTVALIDATION", eventValidation.val())
-                                .setBodyParameter("btnPronadji", btnPronadji.val())
-                                .setBodyParameter("txtPrijemniBroj", parcel.getParcelNo())
-                                .asString()
-                                .withResponse()
-                                .setCallback(new FutureCallback<Response<String>>() {
-                                    @Override
-                                    public void onCompleted(Exception e, final Response<String> result) {
-                                        Document html = Jsoup.parse(result.getResult());
-                                        Element table = html.getElementById("dgInfo");
-
-                                        if (table != null)
-                                        {
-                                            Elements rows = table.select("tr");
-
-                                            for (int i = 1; i<rows.size(); i++)
-                                            {
-                                                messages.add(new StatusMessage(rows.get(i).select("td").get(1).text(),
-                                                        rows.get(i).select("td").get(2).text(),
-                                                        rows.get(i).select("td").get(3).text(),
-                                                        rows.get(i).select("td").get(4).text(),
-                                                        rows.get(i).select("td").get(5).text()
-                                                ));
-                                            }
-                                            adapter.notifyDataSetChanged();
-                                            loading_ProgressBar.setVisibility(View.GONE);
-                                        }
-                                        else
-                                        {
-                                            noMessage_TextView.setVisibility(View.VISIBLE);
-                                            loading_ProgressBar.setVisibility(View.GONE);
-                                        }
-
-
-                                    }
-                                });
-                    }
-                });
+    private void loadStaus() {
+        new CallWebService().execute(parcel.getParcelNo());
     }
 
-    private class ListAdapter extends RecyclerView.Adapter<ListRowHolder>
-    {
+    private class ListAdapter extends RecyclerView.Adapter<ListRowHolder> {
 
         @Override
         public ListRowHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -165,19 +113,77 @@ public class StatusActivity extends AppCompatActivity {
         }
     }
 
-    private class ListRowHolder extends RecyclerView.ViewHolder
-    {
+    private class ListRowHolder extends RecyclerView.ViewHolder {
         final TextView desc_TextView;
         final TextView location_TextView;
         final TextView date_TextView;
 
-        public ListRowHolder(View view)
-        {
+        public ListRowHolder(View view) {
             super(view);
 
-            this.desc_TextView = (TextView)view.findViewById(R.id.row_status_message_tv_desc);
-            this.location_TextView = (TextView)view.findViewById(R.id.row_status_message_tv_location);
-            this.date_TextView = (TextView)view.findViewById(R.id.row_status_message_tv_date);
+            this.desc_TextView = (TextView) view.findViewById(R.id.row_status_message_tv_desc);
+            this.location_TextView = (TextView) view.findViewById(R.id.row_status_message_tv_location);
+            this.date_TextView = (TextView) view.findViewById(R.id.row_status_message_tv_date);
+        }
+    }
+
+    private class CallWebService extends AsyncTask<String, Void, Void> {
+        @Override
+        protected void onPostExecute(Void s) {
+            if (messages.size() == 0) noMessage_TextView.setVisibility(View.VISIBLE);
+            else adapter.notifyDataSetChanged();
+
+            loading_ProgressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            SoapObject soapObject = new SoapObject(NAMESPACE, METHOD_NAME);
+
+            PropertyInfo propertyInfo = new PropertyInfo();
+            propertyInfo.setName("strPrijemniBroj");
+            propertyInfo.setValue(params[0]);
+            propertyInfo.setType(String.class);
+
+            soapObject.addProperty(propertyInfo);
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+            envelope.setOutputSoapObject(soapObject);
+            envelope.dotNet = true;
+
+            HttpTransportSE httpTransportSE = new HttpTransportSE(URL);
+
+            try {
+                httpTransportSE.call(SOAP_ACTION, envelope);
+                SoapObject res = (SoapObject) envelope.getResponse();
+
+                PropertyInfo diffGram = res.getPropertyInfo(1);
+                SoapObject anyType = (SoapObject) diffGram.getValue();
+                PropertyInfo documentElement = anyType.getPropertyInfo(0);
+                SoapObject anyType2 = (SoapObject) documentElement.getValue();
+
+                for (int i = 0; i < anyType2.getPropertyCount(); i++) {
+                    PropertyInfo tableName = anyType2.getPropertyInfo(i);
+                    SoapObject anyType3 = (SoapObject) tableName.getValue();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    SimpleDateFormat output = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+                    Date d = sdf.parse(anyType3.getPropertyInfo(5).getValue().toString());
+                    String formattedTime = output.format(d);
+
+                    messages.add(new StatusMessage(formattedTime,
+                            anyType3.getPropertyInfo(1).getValue().toString(),
+                            anyType3.getPropertyInfo(2).getValue().toString(),
+                            anyType3.getPropertyInfo(7).getValue().toString(),
+                            anyType3.getPropertyInfo(4).getValue().toString()
+                            ));
+                }
+
+            } catch (Exception e) {
+
+            }
+
+            return null;
         }
     }
 }

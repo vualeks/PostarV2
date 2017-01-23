@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/bottom_border"
     >
 
@@ -9,8 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_toLeftOf="@+id/row_status_message_tv_date"
+        android:id="@+id/titles"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        android:paddingRight="16dp"
         >
 
         <TextView
@@ -35,9 +37,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/row_status_message_tv_date"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginRight="16dp"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/titles"
+        android:layout_marginBottom="8dp"
         android:textColor="#444444"
 
         />
